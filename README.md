@@ -15,4 +15,3 @@ OSS 개요, OSS 역사 <br>
 대표적 OSS 소개 <br>
 OSS 저작권 <br>
 
-<img src="https://user-images.githubusercontent.com/58683097/175309185-a7ad9d33-b9aa-4d69-93c0-b18039c602d4.png" width="500" height="400" />
