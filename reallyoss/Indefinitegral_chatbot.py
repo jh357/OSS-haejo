@@ -56,7 +56,7 @@ class RoundedPanel(wx.Panel):
     
 
 
-import searchtext 
+
 
 class Chatbot:
     def __init__(self):
