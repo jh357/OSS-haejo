@@ -9,22 +9,25 @@ class ImagePanel(wx.Panel):
         super(ImagePanel, self).__init__(parent, *args, **kwargs)
         self.image_path = image_path
         self.image = wx.Image(self.image_path, wx.BITMAP_TYPE_ANY)
+        self.min_height = 200  # 최소 높이 설정
         self.Bind(wx.EVT_PAINT, self.on_paint)
         self.Bind(wx.EVT_SIZE, self.on_resize)
 
     def on_paint(self, event):
         dc = wx.PaintDC(self)
         width, height = self.GetSize()
-        img_width, img_height = self.image.GetSize()
 
-        # 비율 유지하며 이미지 크기 조정
-        scale = min(width / img_width, height / img_height)
+        # 최소 높이 보장
+        height = max(height, self.min_height)
+
+        img_width, img_height = self.image.GetSize()
+        scale = min(width / img_width, height / img_height)  # 비율 유지하며 크기 조정
         new_width = int(img_width * scale)
         new_height = int(img_height * scale)
 
         bitmap = wx.Bitmap(self.image.Scale(new_width, new_height, wx.IMAGE_QUALITY_HIGH))
-        x = (width - new_width) // 2  # 이미지 중앙 정렬 (가로)
-        y = (height - new_height) // 2  # 이미지 중앙 정렬 (세로)
+        x = (width - new_width) // 2  # 중앙 정렬 (가로)
+        y = (height - new_height) // 2  # 중앙 정렬 (세로)
         dc.DrawBitmap(bitmap, x, y)
 
     def on_resize(self, event):
@@ -54,14 +57,15 @@ class RoundedPanel(wx.Panel):
         gc.DrawPath(path)
     
     
+
+
+
+
 class Chatbot:
     def __init__(self):
         # 기본 응답 설정
-        self.responses = {
-            "안녕": ["안녕하세요!", "여기 발표에 나와서 영광입니다."],
-            "test": ["텍스트 크기 테스트텍스트 크기 테스트텍스트 크기 테스트텍스트 크기 테스트텍스트 크기 테스트텍스트 크기 테스트텍스트 크기 테스트텍스트 크기 테스트"]
-        }
-        
+        self.responses = searchtext.search_data
+        self.korean_to_english = searchtext.korean_to_english
         # search.py에서 데이터를 동적으로 추가
         self.load_responses_from_search()
 
@@ -77,11 +81,16 @@ class Chatbot:
     def set_keyword(self, keyword):
         """사용자가 대화 시작 시 키워드를 설정"""
         keyword = keyword.strip().lower()  # 공백 제거 및 소문자로 변환
-        if keyword in (key.lower() for key in self.responses):  # 대소문자 무시 비교
-            self.current_keyword = next(key for key in self.responses if key.lower() == keyword)
-            self.current_index = 0  # 키워드가 변경되면 인덱스를 초기화
+        key = self.korean_to_english.get(keyword, keyword)  # 한글이면 변환, 아니면 그대로
+
+        # 키워드 존재 여부 확인 후 설정
+        self.current_keyword = next((k for k in self.responses if k.lower() == key), None)
+
+        if self.current_keyword:
+            self.current_index = 0  # 키워드가 유효하면 인덱스를 초기화
             return True
-        return False
+        else:
+            return False
 
     def get_next_response(self):
         """현재 키워드의 응답 리스트에서 다음 응답 반환"""
@@ -98,70 +107,76 @@ class Chatbot:
 
 
 
+
+
+
 class GameFrame(wx.Frame):
     def __init__(self, *args, **kwargs):
         super(GameFrame, self).__init__(*args, **kwargs)
-        self.chatbot = Chatbot()  # 챗봇 인스턴스 생성
-        panel = wx.Panel(self)
-        main_sizer = wx.BoxSizer(wx.VERTICAL)
+        self.chatbot = Chatbot()
 
-        # 이미지 패널 추가
-        image_panel = ImagePanel(panel, "image/background.jpg")  # 이미지 경로를 지정
-        main_sizer.Add(image_panel, proportion=2, flag=wx.EXPAND | wx.ALL, border=0)
+        # 메인 패널과 레이아웃
+        self.container = wx.Panel(self)
+        self.container_sizer = wx.BoxSizer(wx.VERTICAL)
 
-        # RoundedPanel 추가
-        dialog_panel = RoundedPanel(panel, radius=20)
-        dialog_sizer = wx.BoxSizer(wx.VERTICAL)
+        # 이미지 패널
+        self.image_panel = ImagePanel(self.container, "image/background.jpg")
+        self.container_sizer.Add(self.image_panel, proportion=3, flag=wx.EXPAND | wx.ALL, border=0)
 
-        # 텍스트 디스플레이
-# 텍스트 디스플레이
+        # Panel 1: 대화 패널
+        self.panel1 = RoundedPanel(self.container, radius=20)
+        panel1_sizer = wx.BoxSizer(wx.VERTICAL)
+
         self.text_display = wx.TextCtrl(
-            dialog_panel,
+            self.panel1,
             value="",
             style=wx.TE_MULTILINE | wx.TE_READONLY | wx.TE_NO_VSCROLL | wx.BORDER_NONE
         )
         self.text_display.SetForegroundColour("#FFFFFF")
         self.text_display.SetBackgroundColour("#333333")
         self.text_display.SetFont(wx.Font(15, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
+        panel1_sizer.Add(self.text_display, proportion=1, flag=wx.EXPAND | wx.ALL, border=10)
 
-        dialog_sizer.Add(self.text_display, proportion=1, flag=wx.EXPAND | wx.ALL, border=10)
-
-        # 검색 입력 필드와 버튼
-        # 검색 입력 필드와 버튼
-        search_sizer = wx.BoxSizer(wx.HORIZONTAL)
-
-        # 취소 버튼 추가
-        self.cancel_button = wx.Button(dialog_panel, label="취소")
-        self.cancel_button.Disable()  # 초기 상태에서 비활성화
+        # 버튼 레이아웃 추가
+        button_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        self.cancel_button = wx.Button(self.panel1, label="취소")
         self.cancel_button.Bind(wx.EVT_BUTTON, self.on_cancel_button)
+        button_sizer.Add(self.cancel_button, flag=wx.LEFT | wx.BOTTOM, border=8)
 
-        self.search_input = wx.TextCtrl(dialog_panel)
-        self.search_input.Disable()  # 초기 상태에서 비활성화
-        self.search_button = wx.Button(dialog_panel, label="검색")
-        self.search_button.Disable()  # 초기 상태에서 비활성화
+        button_sizer.AddStretchSpacer()
+
+        self.next_button = wx.Button(self.panel1, label="다음")
+        self.next_button.Bind(wx.EVT_BUTTON, self.on_next_button)
+        button_sizer.Add(self.next_button, flag=wx.RIGHT | wx.BOTTOM, border=8)
+
+        panel1_sizer.Add(button_sizer, flag=wx.EXPAND | wx.ALL, border=10)
+        self.panel1.SetSizer(panel1_sizer)
+
+        # Panel 2: 검색 패널
+        self.panel2 = RoundedPanel(self.container, radius=20)
+        panel2_sizer = wx.BoxSizer(wx.VERTICAL)
+
+        # 검색 필드 및 버튼
+        self.search_input = wx.TextCtrl(self.panel2, style=wx.TE_PROCESS_ENTER)
+        self.search_input.Bind(wx.EVT_TEXT_ENTER, self.on_search_button)
+        self.search_button = wx.Button(self.panel2, label="검색")
         self.search_button.Bind(wx.EVT_BUTTON, self.on_search_button)
 
-        # 버튼 및 입력 필드 레이아웃
-        search_sizer.Add(self.cancel_button, flag=wx.ALL, border=5)
+        # 검색 필드와 버튼 여백 조정
+        search_sizer = wx.BoxSizer(wx.HORIZONTAL)
         search_sizer.Add(self.search_input, proportion=2, flag=wx.ALL | wx.EXPAND, border=5)
         search_sizer.Add(self.search_button, flag=wx.ALL, border=5)
+        panel2_sizer.Add(search_sizer, flag=wx.EXPAND | wx.ALL, border=10)
 
-        # 검색 창을 아래쪽에 추가
-        dialog_sizer.AddStretchSpacer()
-        dialog_sizer.Add(search_sizer, flag=wx.EXPAND | wx.ALL, border=10)
+        self.panel2.SetSizer(panel2_sizer)
 
-        dialog_panel.SetSizer(dialog_sizer)
-        
+        self.container_sizer.Add(self.panel1, proportion=2, flag=wx.EXPAND | wx.ALL, border=16)
+        self.container_sizer.Add(self.panel2, proportion=2, flag=wx.EXPAND | wx.ALL, border=16)
+        self.panel2.Hide()
 
-        # RoundedPanel을 메인 레이아웃에 추가
-        main_sizer.Add(dialog_panel, proportion=1, flag=wx.EXPAND | wx.ALL, border=10)
+        self.container.SetSizer(self.container_sizer)
 
-        # 다음 버튼 추가
-        self.next_button = wx.Button(panel, label="다음")
-        self.next_button.Bind(wx.EVT_BUTTON, self.on_next_button)
-        main_sizer.Add(self.next_button, flag=wx.ALIGN_CENTER | wx.BOTTOM, border=20)
-
-        panel.SetSizer(main_sizer)
+        self.Bind(wx.EVT_SIZE, self.on_resize)
 
         self.concepts = [
             "안녕하세요 무정적분입니다.",
@@ -171,78 +186,71 @@ class GameFrame(wx.Frame):
         self.current_index = 0
         self.full_text_displayed = True
 
-    def set_font_size(self):
-        _, screen_height = self.GetSize()
-        font_size = max(15, min(30, screen_height // 30))
-        font = wx.Font(font_size, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, faceName="Roboto Bold")
-        self.text_display.SetFont(font)
+    def switch_to_panel1(self):
+        self.panel2.Hide()
+        self.panel1.Show()
+        self.container.Layout()
 
-    def on_resize(self, event):
-        self.set_font_size()
-        self.Layout()
-        event.Skip()
-  
+    def switch_to_panel2(self):
+        self.panel1.Hide()
+        self.panel2.Show()
+        self.container.Layout()
+
+    def on_next_button(self, event):
+        if not self.full_text_displayed:
+            self.full_text_displayed = True
+        elif self.current_index < len(self.concepts):
+            threading.Thread(target=self.type_text, args=(self.concepts[self.current_index],)).start()
+            self.current_index += 1
+        else:
+            self.switch_to_panel2()
+
     def on_cancel_button(self, event):
-        """취소 버튼 클릭 처리"""
-        # 텍스트 디스플레이 초기화
-        self.text_display.SetLabel("이제 질문할 수 있습니다!")
-        
-        # 검색 및 취소 버튼 상태 초기화
-        self.search_input.Enable()
-        self.search_button.Enable()
-        self.cancel_button.Disable()
-        
-        # 다음 버튼 비활성화
-        self.next_button.Disable()
-
-        # 리스트 진행 초기화
-        self.concepts = []
-        self.current_index = 0
-        self.full_text_displayed = True
+        self.switch_to_panel2()
 
     def on_search_button(self, event):
-        """검색 입력 처리 및 키워드 설정"""
         query = self.search_input.GetValue().strip()
         self.search_input.Clear()
 
         if not query:
-            self.text_display.SetLabel("입력을 입력하세요.")
+            wx.MessageBox("검색어를 입력해주세요.", "알림", wx.OK | wx.ICON_INFORMATION)
             return
 
-        # 키워드를 설정하고, 성공 여부에 따라 처리
         if self.chatbot.set_keyword(query):
-            # 검색 창과 버튼 비활성화
-            self.search_input.Disable()
-            self.search_button.Disable()
-            self.cancel_button.Enable()  # 취소 버튼 활성화
-
-            # 'self.concepts'를 'self.chatbot.get_next_response()'로 업데이트
             self.concepts = self.chatbot.responses[self.chatbot.current_keyword]
-            self.current_index = 0  # 인덱스를 0으로 초기화
-
-            # 첫 번째 응답 바로 출력
-            first_response = self.chatbot.get_next_response()
-            threading.Thread(target=self.type_text, args=(first_response,)).start()
-
-            # 첫 번째 응답을 이미 출력했으므로 current_index를 1로 설정
-            self.current_index = 1
-
-            # "다음" 버튼 활성화 (다음 응답을 위해)
-            self.next_button.Enable()
+            self.current_index = 0
+            self.switch_to_panel1()
+            self.text_display.SetValue(self.chatbot.get_next_response())
         else:
-            self.text_display.SetLabel("알 수 없는 입력입니다. 다시 시도해주세요.")
+            wx.MessageBox("검색 결과가 없습니다.", "알림", wx.OK | wx.ICON_INFORMATION)
 
+    def on_resize(self, event):
+        width, height = self.GetSize()
 
-    def show_followup_message(self):
-        time.sleep(2)  # 2초 대기 후 메시지 표시
-        wx.CallAfter(self.text_display.SetLabel, "또 검색할 내용이 있습니까?")
+        base_width, base_height = 100, 40
+        scaling_factor = min(width / 400, height / 600)
 
+        new_width = int(base_width * scaling_factor)
+        new_height = int(base_height * scaling_factor)
 
+        self.search_button.SetMinSize((new_width, new_height))
+        button_font = wx.Font(max(12, int(new_height * 0.5)), wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD)
+        self.search_button.SetFont(button_font)
+
+        self.search_input.SetMinSize((new_width * 4, new_height))
+        input_font = wx.Font(max(12, int(new_height * 0.5)), wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
+        self.search_input.SetFont(input_font)
+
+        self.search_input.SetMargins(5, 0)
+        # 검색 필드 내부 여백 조정
+        self.search_input.SetMargins(10, 5)  # 좌우 여백 10, 상하 여백 5
+
+        self.container.Layout()
+        event.Skip()
 
     def type_text(self, text):
-        """텍스트를 한 글자씩 출력"""
         self.full_text_displayed = False
-        self.text_display.SetValue("")  # 기존 텍스트 초기화
+        self.text_display.SetValue("")
         for char in text:
             if self.full_text_displayed:
                 wx.CallAfter(self.text_display.SetValue, text)
@@ -251,25 +259,10 @@ class GameFrame(wx.Frame):
             time.sleep(0.05)
         self.full_text_displayed = True
 
-    def on_next_button(self, event):
-        """다음 버튼 클릭 처리"""
-        if not self.full_text_displayed:
-            self.full_text_displayed = True
-        elif self.current_index < len(self.concepts):
-            # 현재 인덱스의 응답을 출력
-            threading.Thread(target=self.type_text, args=(self.concepts[self.current_index],)).start()
-            self.current_index += 1  # 다음 응답을 준비
-        else:
-            # 모든 대사가 끝난 후 검색창 활성화
-            self.text_display.SetLabel("이제 질문할 수 있습니다!")
-            self.search_input.Enable()
-            self.search_button.Enable()
-            self.cancel_button.Disable()
-            self.next_button.Disable()
-
 
 
 app = wx.App(False)
-frame = GameFrame(None, title="게임 스타일 대화창", size=(400, 600))
+frame = GameFrame(None, title="게임 스타일 대화창", size=(600, 800))
 frame.Show()
 app.MainLoop()
+
