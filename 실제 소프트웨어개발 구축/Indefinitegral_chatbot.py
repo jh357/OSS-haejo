@@ -54,10 +54,6 @@ class RoundedPanel(wx.Panel):
         gc.DrawPath(path)
     
     
-
-
-
-
 class Chatbot:
     def __init__(self):
         # 기본 응답 설정
