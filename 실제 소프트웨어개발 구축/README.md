@@ -20,6 +20,7 @@ Tkinter, pygame,  PyQt5 / PySide2, Kivy, wxPython 등 많은 대화창으로 만
 
 
 - 이거 맞추면 치킨
+
 ![이거 맞추면 치킨](gihub이미지모음/이거_맞추면_치킨.png)
 
 - 성공
