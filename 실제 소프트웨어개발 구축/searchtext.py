@@ -12,22 +12,22 @@ search_data = {
     "oss": [
         "OSS(Open Source Software)는 누구나 접근 가능하고 기여할 수 있는 소프트웨어를 의미합니다.",
         "OSS의 주로 특성이란",
-        ,"자유로운 사용으로 누구나 무료로 소프트웨어를 사용할 수 있고"
+        "자유로운 사용으로 누구나 무료로 소프트웨어를 사용할 수 있고"
         ,"소스 코드 접근 가능으로 사용자가 소스 코드를 열람하고 수정할 수 있고"
         ,"배포을 통해 수정된 버전이나 원본을 다른 사람들과 자유롭게 공유 가능하고"
         ,"커뮤니티 기반 개발으로 개발자들이 협업하여 소프트웨어를 개선합니다."
         ,"oss의 장단점이 궁금하면 검색해주세요 (oss 장단점)"
-    ]
+    ],
     "oss_property" : ["장점은  커스터마이징 가능으로 소스 코드를 수정하여 특정 요구 사항에 맞게 소프트웨어를 변경할 수 있습니다."
                       ," 또한 보안성으로는 코드가 공개되므로 전 세계 개발자들이 보안 취약점을 확인하고 수정할 수 있어 보안이 강화됩니다."
                       , "독립성에서는 상용 소프트웨어의 공급업체에 의존하지 않고 독립적으로 소프트웨어를 운영할 수 있습니다." 
                       , "또한 커뮤니티의 지원을 통해 문제를 해결하고 최신 기능을 빠르게 도입할 수 있습니다."
                       , "그러나 단점도 있습니다. oss 단점은" 
-                      , "기술 지원 부족으로 일부 OSS는 공식적인 기술 지원이 부족할 수 있으며 이로 인해 문제 해결을 위해서는 사용자가 커뮤니티에 의존해야 할 수 밖에 없습니다.
+                      , "기술 지원 부족으로 일부 OSS는 공식적인 기술 지원이 부족할 수 있으며 이로 인해 문제 해결을 위해서는 사용자가 커뮤니티에 의존해야 할 수 밖에 없습니다."
                       ,"또한 일부 오픈 소스 소프트웨어는 사용법이나 설정이 복잡할 수 있으므로 초기 학습이 필요할 수 있습니다."
                         ]
     , "trap" : ["여기가 말하면 뭔가 제 코드가 엉망이 되였군요",
-                , "여기는 search 함수에 없는 속성입니다."
+                "여기는 search 함수에 없는 속성입니다."
                 ]
 , "oss_history_1950_1960" : ["이 시기는 아직 오픈소스라는 용어가 존재하지 않았지만 소프트웨어의 공유와 협업을 통해 문제를 해결하려는 문화가 형성되었습니다."
                             ,"초기 소프트웨어 공유 문화에서 당시에는 소프트웨어가 독립적인 제품으로 여겨지지 않았고, 주로 하드웨어와 함께 무료로 제공되었습니다."
@@ -47,6 +47,176 @@ search_data = {
                              ,"이 해커들은 기술적 문제 해결과 코드 공유를 강조하며, 이후 오픈소스 운동에 지대한 영향을 미쳤습니다."
                              ,"이 문화는 후일 오픈소스 네트워크 기술의 탄생에 영향을 미쳤습니다."
                             ]
+                            , "oss_history_1970_Unix" : [
+                                
+                            ]
+                            , "oss_history_1970_Scct" : [
+                                
+                            ]
+                            #1980년대
+                            , "oss_history_1980_GNU": [
+                                
+                            ]
+                            ,"oss_history_1980_X_window" :[
+                                
+                            ]
+                            ,"oss_history_1980_FSF":[
+                                
+                            ]
+                            ,"oss_history_1980_BSD" :[
+                                
+                            ]
+                            ,"oss_history_1980_hacker_culture":[
+                                
+                            ]
+                            #1990년대
+                            ,"oss_history_1990_BSD" : [
+                                
+                            ]
+                            ,"oss_history_1990_Lunux" : [
+                                
+                            ]
+                            ,"oss_history_1990_GNU" : [
+                                
+                            ]
+                            ,"oss_history_1990_python" : [
+                                
+                            ]
+                            ,"oss_history_1990_Red_Hat" : [
+                                
+                            ]
+                            , "oss_history_1990_Netscape" : [
+                                
+                            ]
+                            ,"oss_history_1990_MySQL" : [
+                                
+                            ]
+                            ,"oss_history_1990_GNOME" : [
+                                
+                            ]
+                            ,"oss_history_1990_OSS" : [
+                                
+                            ]
+                            ,"oss_history_1990_OSI" : [
+                                
+                            ]
+                            ,"oss_history_1990_Mozilla" : [
+                                
+                            ]
+                            ,"oss_history_1990_SourceForge" : [
+                                
+                            ]
+                            ,"oss_history_2000_ASF" : [
+                                
+                            ]
+                            ,"oss_history_2000_Red_Hat" : [
+                                
+                            ]
+                            ,"oss_history_2000_OpenOffice_org" : [
+                                
+                            ]
+                            ,"oss_history_2000_Mozilla_Firefox" : [
+                                
+                            ]
+                            ,"oss_history_2000_Ubuntu" : [
+                                
+                            ]
+                            ,"oss_history_2000_Git" : [
+                                
+                            ]
+                            ,"oss_history_2000_WordPress" : [
+                                
+                            ]
+                            ,"oss_history_2000_Hadoop" : [
+                                
+                            ]
+                            ,"oss_history_2000_Ubuntu" : [
+                                
+                            ]
+                            ,"oss_history_2000_MySQL" : [
+                                
+                            ]
+                            ,"oss_history_2000_" : [
+                                
+                            ]
+                            ,"oss_history_2000_Android" : [
+                                
+                            ]
+                            #2010년대
+                            ,"oss_history_2010_OpenStack" : [
+                                
+                            ]
+                            ,"oss_history_2010_GitHub" : [
+                                
+                            ]
+                            ,"oss_history_2010_Node.js" : [
+                                
+                            ]
+                            ,"oss_history_2010_Apache_Hadoop" : [
+                                
+                            ]
+                            ,"oss_history_2010_Docker" : [
+                                
+                            ]
+                            ,"oss_history_2010_TensorFlow" : [
+                                
+                            ]
+                            ,"oss_history_2010_Kubernetes" : [
+                                
+                            ]
+                            ,"oss_history_2010_React" : [
+                                
+                            ]
+                            ,"oss_history_2010_PyTorch" : [
+                                
+                            ]
+                            ,"oss_history_2010_GitHub" : [
+                                
+                            ]
+                            ,"oss_history_2010_Visual_Studio_Code" : [
+                                
+                            ]
+                            ,"oss_history_2010_LibreOffice" : [
+                                
+                            ]
+                            ,"oss_history_2010_Ansible" : [
+                                
+                            ]
+                            #2020년대
+                            ,"oss_history_2020" : [
+                                
+                            ]
+                            ,"oss_history_2020_ChatGPT" : [
+                                
+                            ]
+                            ,"oss_history_2020_Kubernetes" : [
+                                
+                            ]
+                            ,"oss_history_2020_Flutter_and_React_Native" : [
+                                
+                            ]
+                            ,"oss_history_2020_Popularization_of_data_engineering_tools" : [
+                                
+                            ]
+                            ,"oss_history_2020_Stable_Diffusion" : [
+                                
+                            ]
+                            ,"oss_history_2020_MLOps" : [
+                                
+                            ]
+                            ,"oss_history_2020_GitHub_Copilot" : [
+                                
+                            ]
+       # OSS 저작건
+       ,"oss_copyright" : [
+       "오픈 소스 소프트웨어의 코드, 문서, 기타 창작물은 저작권법에 따라 보호된다."
+       "즉 오픈 소스 소프트웨어의 개발자는 해당 소스 코드에 대한 저작권을 보유해야 하고 이를 통해 코드의 복제, 배포, 수정 등을 제어할 수 있다."
+       ,"저작권의 양도로 오픈 소스 프로젝트에서는 원저작자가 자신의 저작권을 그대로 두고, 특정 조건 하에 다른 사람들이 코드를 수정하고 배포할 수 있도록 허락하는 라이선스를 제공합니다"                        
+                            ]
+                            
+                            
+                            
+
 }
 
 # 한국어 매핑 (한글 키워드 -> 영문 키워드)
@@ -66,3 +236,20 @@ korean_to_english = {
     ,"햣":"git"
     ,"햐소ㅕㅠ":"github"
 }
+
+keyword_combinations = {
+    "oss 장단점": "oss_property",
+    "oss 역사": "oss_history",
+    "git 장단점": "git_property"
+}
+
+
+subkey = ["역사", "장단점", "개념", "사용 방법"]
+
+panel3_keywords = ['vecter/panel3', '#panel3', '!panel3']
+
+
+
+
+
+
